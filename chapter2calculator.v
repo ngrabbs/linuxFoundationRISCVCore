@@ -16,8 +16,10 @@
 \TLV
    
    $reset = *reset;
+
    $val1[31:0] = >>1$out;
    $val2[31:0] = {28'b0, $val2_rand[3:0]};
+
    $sum[31:0] = $val1 + $val2;
    $diff[31:0] = $val1 - $val2;
    $prod[31:0] = $val1 * $val2;
