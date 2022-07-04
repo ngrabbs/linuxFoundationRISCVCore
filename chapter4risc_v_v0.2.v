@@ -49,6 +49,8 @@
                     $taken_br ? $br_tgt_pc : 
                                             $pc + 4;
    
+   // instruction memory..... ROM basically, this is 
+   // where the instructions are coming from
    `READONLY_MEM($pc, $$instr[31:0]);
    
    //instruction types
@@ -124,6 +126,7 @@
    $wr_data[31:0] = $rd_valid ? $result : 32'b0;
    $wr_index[4:0] = $rd_valid ? $rd : 5'b0;
    
+   // dont write if target x0
    $wr_en = $rd ==? 5'b00000 ? 0 : 1;
    
    
@@ -132,10 +135,9 @@
    // Assert these to end simulation (before Makerchip cycle limit).
    m4+tb()
    *failed = *cyc_cnt > M4_MAX_CYC;
-   
-   m4+rf(32, 32, $reset, $wr_en, $wr_index, $wr_data, $rd1_en, $rs1, $src1_value, $rd2_en, $rs2, $src2_value)
+   m4+rf(32, 32, $reset, $wr_en, $wr_index, $wr_data, $rs1_valid, $rs1, $src1_value, $rs2_valid, $rs2, $src2_value)
+
    //m4+dmem(32, 32, $reset, $addr[4:0], $wr_en, $wr_data[31:0], $rd_en, $rd_data)
    m4+cpu_viz()
 \SV
    endmodule
-
