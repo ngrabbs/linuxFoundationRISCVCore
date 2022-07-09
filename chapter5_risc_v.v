@@ -155,10 +155,6 @@
    $sra_rslt[63:0] = $sext_src1 >> $src2_value[4:0];
    $srai_rslt[63:0] = $sext_src1 >> $imm[4:0];
 
-   // TODO finish implementing ALU:
-   // https://learning.edx.org/course/course-v1:LinuxFoundationX+LFD111x+1T2021/block-v1:LinuxFoundationX+LFD111x+1T2021+type@sequential+block@98b25bf4a199474ca1c47af1aabcb045/block-v1:LinuxFoundationX+LFD111x+1T2021+type@vertical+block@3214b5294e334579901f143a9a26f4bf
-   
-   
    // alu
    $result[31:0] =
       $is_addi ? $src1_value + $imm :
