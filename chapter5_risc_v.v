@@ -47,6 +47,8 @@
    $pc[31:0] = >>1$next_pc;
    $next_pc[31:0] = $reset ? 0 : 
                     $taken_br ? $br_tgt_pc : 
+                    $is_jal ? $result :
+                    $is_jalr ? $jalr_tgt_pc :
                                             $pc + 4;
    
    // instruction memory..... ROM basically, this is 
@@ -140,6 +142,7 @@
       ($is_bgeu) & ($src1_value >= $src2_value) ? 1'b1 :
                                                   1'b0;
    $br_tgt_pc[31:0] = $taken_br ? $pc + $imm : 32'b0;
+   $jalr_tgt_pc[31:0] = $is_jalr ? $src1_value + $imm : 32'b0;
   
    // SLTU and SLTI ( set if less than, unsigned) results:
    $sltu_rslt[31:0] = {31'b0, $src1_value < $src2_value};
@@ -175,7 +178,7 @@
       $is_sltiu ? $sltiu_rslt :
       $is_lui ? {$imm[31:12], 12'b0} :
       $is_auipc ? $pc + $imm :
-      $is_jal ? $pc + 32'd4 :
+      $is_jal ? $pc + $imm:
       $is_jalr ? $pc + 32'd4 :
       $is_slt ? ( ($src1_value[31] == $src2_value[31]) ?
                       $sltu_rslt :
