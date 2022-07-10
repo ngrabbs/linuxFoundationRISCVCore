@@ -157,6 +157,7 @@
 
    // alu
    $result[31:0] =
+      $is_load | $is_s_instr ? ($src1_value + $imm)/4 :
       $is_addi ? $src1_value + $imm :
       $is_andi ? $src1_value & $imm :
       $is_ori ? $src1_value | $imm :
@@ -188,7 +189,10 @@
    
    // write back $result if $rd
    // $wr_en, $wr_index, $wr_data
-   $wr_data[31:0] = $rd_valid ? $result : 32'b0;
+   $wr_data[31:0] = 
+      $is_load ? $ld_data :
+      $rd_valid ? $result : 
+         32'b0;
    $wr_index[4:0] = $rd_valid ? $rd : 5'b0;
    
    // dont write if target x0
@@ -201,6 +205,8 @@
    m4+tb()
    *failed = *cyc_cnt > M4_MAX_CYC;
    m4+rf(32, 32, $reset, $wr_en, $wr_index, $wr_data, $rs1_valid, $rs1, $src1_value, $rs2_valid, $rs2, $src2_value)
+   m4+dmem(32, 32, $reset, $result[4:0], $is_s_instr, $src2_value, $is_load, $ld_data[31:0])
+
 
    //m4+dmem(32, 32, $reset, $addr[4:0], $wr_en, $wr_data[31:0], $rd_en, $rd_data)
    m4+cpu_viz()
